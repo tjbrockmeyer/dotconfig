@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+DIR=$(cd "$(dirname "$0")" && pwd)
+
+for name in nvim tmux; do
+  target="$HOME/.config/$name"
+  source="$DIR/$name"
+
+  if [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
+    continue
+  fi
+
+  if [ -e "$target" ] || [ -L "$target" ]; then
+    printf '%s already exists and will be deleted. Continue? [y/N] ' "$target" >&2
+    read -r reply
+    case $reply in
+    y | yes) rm -rf "$target" ;;
+    *)
+      printf 'aborted\n' >&2
+      exit 1
+      ;;
+    esac
+  fi
+
+  mkdir -p "$(dirname "$target")"
+  ln -s "$source" "$target"
+done

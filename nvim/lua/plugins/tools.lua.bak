@@ -1,0 +1,14 @@
+return {
+	"WhoIsSethDaniel/mason-tool-installer.nvim",
+	config = function()
+		require("mason-tool-installer").setup({
+			ensure_installed = {
+				"shellcheck",
+				"glow",
+				"stylua",
+			},
+			run_on_start = true,
+			start_delay = 1500,
+		})
+	end,
+}

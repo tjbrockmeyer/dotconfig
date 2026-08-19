@@ -1,0 +1,83 @@
+
+# Neovim Cheatsheet
+
+g0, g$, g^ - jump to first, first non-blank, or last char in screen-line
+gM, gm     - jump to middle of line or screen-line
+t, T       - jump to just-before next occurrence of next-typed char
+gg, G      - jump to first or last line
+(N)%       - jump to some percentage of the way into a file
+w, b, W, B - jump to start of word, forward and backward
+e, ge, E, GE   - jump to end of word, forward and backward
+(, ), {, }     - jump to start or end of sentences and paragraphs
+[(, [{, ]), ]} - jump to previous unclosed ( or {, or next unclosed ) or }
+[m, ]m, [M, ]M - jump to start or end of method
+*, #, g*, g#   - search (forward/backward) for the (full/partial) match of the identifier under the cursor
+gd, gD         - goto (local/global) declaration of identifier under cursor
+
+:marks           - print the lark list
+m                - mark current position with a letter [a-zA-Z]
+`a[a-z], `A[A-Z] - jump to mark ([a-z] in current file, or [A-Z] in any file)
+``               - back to before the last jump
+`[, `]           - start or end of last operated or put text
+`<, `>           - start or end of last visual area
+CTRL-O, CTRL-I   - go back and forth in the jump list
+:ju[mps]         - print the jump list
+
+CTRL-E, CTRL-Y   - window up or down (toward the End, toward the Y???)
+CTRL-D, CTRL-U   - window up or down by half page (Downward or Upward)
+CTRL-F, CTRL-B   - window down or up by whole page (Forward-down or Backward-up)
+
+i_CTRL-O         - run a command, then return to Insert mode
+i_CTRL-V         - insert a literal character, or enter decimal byte value
+i_CTRL-R {reg}   - insert the contents of a register
+i_CTRL-N, i_CTRL-P - insert next or previous completion of thing under cursor
+i_CTRL-W         - delete the word before the cursor
+:r [file]        - insert the contents of [file] below the cursor
+:r! {command}    - insert the output of {command} below the cursor
+
+J                - delete <EOL>s (join lines together) - can be used with {visual}
+
+:reg             - show all registers
+"{char}          - use register {char} for next delete, yank or put
+]p, [p           - put but adjust indent to current line
+gp, gP           - same as p or P, but leaves cursor after the new text
+yy, Y            - yank N lines into a register
+dd               - delete N lines into a register
+D                - delete to the end of the line into a register + N-1 more lines
+
+{visual}!{command} - filter the selected text through {command}
+v_aw, v_aW       - visual, select the current + N-1 words
+v_as, v_ap       - visual, select the current + N-1 sentences or paragraphs
+v_ab, v_ib       - visual, select the full block on or between parentheses
+v_aB, v_iB       - visual, select the full block on or between curly braces
+v_a', v_i'       - visual, select the full string on or between single quotes
+v_a", v_i"       - visual, select the full string on or between double quotes
+v_a`, v_i`       - visual, select the full string on or between back quotes
+
+.                - repeat last change (with count replaced with N)
+Q                - replay last recorded macro
+@@               - repeat previous @{a-z} N times
+:@{a-z}          - execute the contents of register {a-z} as an Ex command
+:@@              - repeat the last :@{a-z}
+:[range]g/{pattern}/[cmd]     - execute Ex command on the lines in [range] where {pattern} matches
+:[range]g!/{pattern}/[cmd]     - same, but where {pattern} does not match
+
+:so {file}   - read Ex commands from {file}
+:so! {file}  - read Vim commands from {file}
+
+:map {lhs} {rhs}            - maps {lhs} to {rhs} in Normal and Visual - {rhs} is scanned for further mappings
+:map! {lhs} {rhs}           - same, but for Insert and Command-line mode
+:noremap {lhs} {rhs}        - same as :map, but {rhs} is not scanned for further mappings
+:unmap {lhs}, :unmap! {lhs} - remove mappings for the specified modes (same as modes for :map)
+
+:help Q_qf
+:help quickfix
+
+CTRL-G             - show info about the current file
+CTRL-W f           - split window and edit the file name under the cursor
+CTRL-W n, :new     - create new empty window
+CTRL-W o, :only    - close all other windows
+CTRL-W t, CTRL-W b - move to top or bottom window
+CTRL-W p           - move to previous window
+CTRL-W r, CTRL-W R - rotate windows downward or upward
+
