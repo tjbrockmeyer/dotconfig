@@ -44,8 +44,15 @@ return {
 		end
 
 		vim.treesitter.language.register("groovy", "Jenkinsfile")
-		vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
-		vim.wo[0][0].foldmethod = "expr"
+
+		-- Use global options (vim.o), not vim.wo[0][0]. The latter only applies to the
+		-- current window+buffer pair, so `nvim file` gets treesitter folds while files
+		-- opened later (e.g. from netrw) fall back to foldmethod=manual.
+		-- foldlevel/foldlevelstart=99 keeps folds available but open by default.
+		vim.o.foldmethod = "expr"
+		vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+		vim.o.foldlevel = 99
+		vim.o.foldlevelstart = 99
 
 		vim.api.nvim_create_autocmd("FileType", {
 			pattern = patterns,
