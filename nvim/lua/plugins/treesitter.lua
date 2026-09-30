@@ -1,10 +1,13 @@
 return {
 	"nvim-treesitter/nvim-treesitter",
 	branch = "main",
+	-- Pin a known-good main commit (Neovim 0.12+ rewrite). Bump intentionally.
+	commit = "910fdf6f49e9dee7e7257c7d11a76b040fdfb9de",
 	lazy = false,
 	build = ":TSUpdate",
 	config = function()
 		local ts = require("nvim-treesitter")
+
 		local parsers = {
 			"json",
 			"javascript",
@@ -26,23 +29,13 @@ return {
 			"go",
 			"templ",
 			"hurl",
-			"bash",
+			"groovy",
 		}
 
-		for _, parser in ipairs(parsers) do
-			ts.install(parser)
-		end
+		-- Async no-op for already-installed parsers; :TSUpdate (build) keeps revisions in sync.
+		ts.install(parsers)
 
-		-- Not every tree-sitter parser is the same as the file type detected
-		-- So the patterns need to be registered more cleverly
-		local patterns = {}
-		for _, parser in ipairs(parsers) do
-			local parser_patterns = vim.treesitter.language.get_filetypes(parser)
-			for _, pp in pairs(parser_patterns) do
-				table.insert(patterns, pp)
-			end
-		end
-
+		-- Jenkinsfile is detected as filetype "Jenkinsfile"; map it to the groovy parser.
 		vim.treesitter.language.register("groovy", "Jenkinsfile")
 
 		-- Use global options (vim.o), not vim.wo[0][0]. The latter only applies to the
@@ -54,10 +47,15 @@ return {
 		vim.o.foldlevel = 99
 		vim.o.foldlevelstart = 99
 
+		-- Highlighting/indent are not auto-enabled on main. pcall so buffers without a
+		-- parser (help, netrw, etc.) do not error; avoid precomputing FileType patterns
+		-- which races async installs and misses registered aliases (e.g. bash -> sh).
 		vim.api.nvim_create_autocmd("FileType", {
-			pattern = patterns,
-			callback = function()
-				vim.treesitter.start()
+			callback = function(ev)
+				local ok = pcall(vim.treesitter.start)
+				if ok then
+					vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+				end
 			end,
 		})
 	end,

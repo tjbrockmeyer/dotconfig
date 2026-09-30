@@ -73,7 +73,7 @@ return {
 		require("mason").setup({})
 		require("mason-lspconfig").setup({
 			ensure_installed = {
-				"tsgo",
+				"tsc",
 				"eslint",
 				"rust_analyzer",
 				"lua_ls",
